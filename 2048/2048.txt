@@ -1,0 +1,341 @@
+#include <stdio.h>
+#include <conio.h>
+#include <graphics.h>
+#include <stdlib.h>
+#include <time.h>
+
+#define MAX_GRID 4
+#define GRID_WIDTH 100
+#define MAX_INTERVAL 5
+#define INTERVAL_WIDTH 15
+
+#define reverse(m, n) \
+    (m ^= n);         \
+    (n ^= m);         \
+    (m ^= n)
+
+enum Colorset
+{
+	two0 = RGB(204, 193, 180),
+	two1 = RGB(237, 228, 218),
+	two2 = RGB(236, 224, 201),
+	two3 = RGB(237, 178, 123),
+	two4 = RGB(239, 150, 102),
+	two5 = RGB(239, 125, 98),
+	two6 = RGB(238, 96, 64),
+	two7 = RGB(234, 208, 117),
+	two8 = RGB(233, 205, 101),
+	two9 = RGB(233, 201, 85),
+	two10 = RGB(233, 198, 69),
+	two11 = RGB(242, 17, 158),
+	background = RGB(187, 173, 160),
+};
+Colorset arr[13] = {two0, two1, two2, two3, two4, two5, two6, two7, two8, two9, two10, two11, background};
+
+int num[12] = {0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048};
+int content[MAX_GRID][MAX_GRID];
+POINT pos[MAX_GRID][MAX_GRID];
+
+int condition = 0;
+
+int GenerateNumber()
+{
+	if (rand() % 10 == 1)
+	{
+		return 4;
+	}
+	else
+	{
+		return 2;
+	}
+}
+
+void GeneratePosition()
+{
+	int x, y;
+	do 
+	{
+		x = rand() % MAX_GRID;
+		y = rand() % MAX_GRID;
+	} while (content[x][y] != 0); 
+
+	content[x][y] = GenerateNumber(); 
+}
+
+void GameInit()
+{
+	setbkcolor(background);
+	cleardevice();
+
+	for (int i = 0; i < MAX_GRID; i++)
+	{
+		for (int j = 0; j < MAX_GRID; j++)
+		{
+			pos[i][j].x = j * GRID_WIDTH + (j + 1) * INTERVAL_WIDTH;
+			pos[i][j].y = i * GRID_WIDTH + (i + 1) * INTERVAL_WIDTH;
+		}
+	}
+	
+	srand((unsigned int)time(NULL));
+	GeneratePosition();
+	GeneratePosition();
+}
+
+
+void GameDraw()
+{
+	for (int i = 0; i < MAX_GRID; i++)
+	{
+		for (int j = 0; j < MAX_GRID; j++)
+		{
+			for (int k = 0; k < 12 ; k++) 
+			{
+				if (content[i][j] == num[k])
+				{
+					setfillcolor(arr[k]);
+					solidrectangle(pos[i][j].x, pos[i][j].y, pos[i][j].x + GRID_WIDTH, pos[i][j].y + GRID_WIDTH);
+
+					if (content[i][j] != 0)
+					{
+						char number[5] = " ";
+						settextcolor(RGB(119, 110, 101));
+						settextstyle(50, 0, "楷体");
+						setbkmode(TRANSPARENT);
+						sprintf(number, "%d", content[i][j]);
+
+						int tempx = GRID_WIDTH / 2 - textwidth(number) / 2;
+						int tempy = GRID_WIDTH / 2 - textheight(number) / 2;
+						outtextxy(pos[i][j].x + tempx, pos[i][j].y + tempy, number);
+					}
+				}
+			}
+		}
+	}
+
+
+}
+
+void Upmoving()
+{
+	for (int j = 0; j < MAX_GRID; j++)
+	{
+		for (int i = 1; i < MAX_GRID; i++)
+		{
+			if (!content[i - 1][j] && content[i][j])
+			{
+				reverse(content[i - 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int i = 1; i < MAX_GRID; i++)
+		{
+			if (!content[i - 1][j] && content[i][j])
+			{
+				reverse(content[i - 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int i = 1; i < MAX_GRID; i++)
+		{
+			if (content[i - 1][j] == content[i][j] && content[i - 1][j])
+			{
+				content[i - 1][j] <<= 1;
+				content[i][j] = 0;
+				condition = 1;
+			}
+		}
+
+		for (int i = 1; i < MAX_GRID; i++)
+		{
+			if (!content[i - 1][j] && content[i][j])
+			{
+				reverse(content[i - 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+	}
+	
+	printf("up\n");
+}
+
+void Downmoving()
+{
+	for (int j = 0; j < MAX_GRID; j++)
+	{
+		for (int i = MAX_GRID - 2; i >= 0; i--)
+		{
+			if (content[i][j] && !content[i + 1][j])
+			{
+				reverse(content[i + 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int i = MAX_GRID - 2; i >= 0; i--)
+		{
+			if (content[i][j] && !content[i + 1][j])
+			{
+				reverse(content[i + 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int i = MAX_GRID - 2; i >= 0; i--)
+		{
+			if (content[i][j] == content[i + 1][j] && content[i + 1][j])
+			{
+				content[i + 1][j] <<= 1;
+				content[i][j] = 0;
+				condition = 1;
+			}
+		}
+
+		for (int i = MAX_GRID - 2; i >= 0; i--)
+		{
+			if (content[i][j] && !content[i + 1][j])
+			{
+				reverse(content[i + 1][j], content[i][j]);
+				condition = 1;
+			}
+		}
+	}
+
+	printf("down\n");
+}
+
+void Leftmoving()
+{
+	for (int i = 0; i < MAX_GRID; i++)
+	{
+		for (int j = 1; j < MAX_GRID; j++)
+		{
+			if (!content[i][j - 1] && content[i][j])
+			{
+				reverse(content[i][j - 1], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int j = 1; j < MAX_GRID; j++)
+		{
+			if (!content[i][j - 1] && content[i][j])
+			{
+				reverse(content[i][j - 1], content[i][j]);
+				condition = 1;
+			}
+		}
+
+		for (int j = 1; j < MAX_GRID; j++)
+		{
+			if (content[i][j - 1] == content[i][j] && content[i][j - 1])
+			{
+				content[i][j - 1] <<= 1;
+				content[i][j] = 0;
+				condition = 1;
+			}
+		}
+
+		for (int j = 1; j < MAX_GRID; j++)
+		{
+			if (!content[i][j - 1] && content[i][j])
+			{
+				reverse(content[i][j - 1], content[i][j]);
+				condition = 1;
+			}
+		}
+	}
+
+	printf("left\n");
+}
+
+void Rightmoving()
+{
+	for (int i = 0; i < MAX_GRID; i++)
+	{
+		for (int j = MAX_GRID - 2; j >= 0; j--)
+		{
+			if (content[i][j] && !content[i][j + 1])
+			{
+				reverse(content[i][j], content[i][j + 1]);
+				condition = 1;
+			}
+		}
+
+		for (int j = MAX_GRID - 2; j >= 0; j--)
+		{
+			if (content[i][j] && !content[i][j + 1])
+			{
+				reverse(content[i][j], content[i][j + 1]);
+				condition = 1;
+			}
+		}
+
+		for (int j = MAX_GRID - 2; j >= 0; j--)
+		{
+			if (content[i][j] == content[i][j + 1] && content[i][j + 1])
+			{
+				content[i][j + 1] <<= 1;
+				content[i][j] = 0;
+				condition = 1;
+			}
+		}
+
+		for (int j = MAX_GRID - 2; j >= 0; j--)
+		{
+			if (content[i][j] && !content[i][j + 1])
+			{
+				reverse(content[i][j], content[i][j + 1]);
+				condition = 1;
+			}
+		}
+	}
+
+	printf("right\n");
+}
+
+void MoveOrNot()
+{
+	if (condition == 1)
+	{
+		GeneratePosition();
+		condition = 0;
+	}
+}
+
+void GameControl()
+{
+	char direction = getch();
+
+	switch (direction)
+	{
+	case 72:
+		Upmoving();
+		break;
+	case 80:
+		Downmoving();
+		break;
+	case 75:
+		Leftmoving();
+		break;
+	case 77:
+		Rightmoving();
+		break;
+	}
+}
+
+int main()
+{
+	initgraph(MAX_GRID * GRID_WIDTH + MAX_INTERVAL * INTERVAL_WIDTH, MAX_GRID * GRID_WIDTH + MAX_INTERVAL * INTERVAL_WIDTH);
+
+	GameInit();
+	while (1) 
+	{
+		GameDraw();
+		GameControl();
+		MoveOrNot();
+	}
+	
+	return 0;
+}
