@@ -1,0 +1,49 @@
+cleardevice();//清屏
+setfont(100, 0, "Microsoft Yahei UI Bold");//设置字体
+settextcolor(RGB(120, 116, 101));
+outtextxy(15, 0, "2048");
+setfont(30, 0, "Microsoft Yahei UI Bold");//设置字体
+
+setfillcolor(RGB(141, 122, 105));
+solidroundrect(13, 85, 200, 127, 15, 15);
+setbkcolor(RGB(141, 122, 105));//背景颜色
+settextcolor(RGB(248, 247, 241));//字体颜色
+char wq[] = "音乐:开(n)/关(f)";
+outtextxy(18, 90, wq);
+solidroundrect(13, 140, 200, 200, 10, 10);
+settextcolor(RED);//字体颜色
+char rq[] = "温馨提示:此界面";
+outtextxy(18, 140, rq);
+char fq[] = " 均用鼠标输入。";
+outtextxy(18, 170, fq);
+
+setfillcolor(RGB(184, 175, 160));//设置当前填充颜色
+solidroundrect(210, 10, 330, 80, 15, 15);//圆角梯形
+setfont(28, 0, "Microsoft Yahei UI Bold");//设置当前字体
+setbkcolor(RGB(184, 175, 160));//背景颜色
+settextcolor(RGB(0, 0, 0));//字体颜色
+outtextxy(230, 20, "单次得分");
+char str[10], str_i[10];
+
+setbkcolor(RGB(184, 175, 160));
+//itoa(score_i, str_i, 10);
+outtextxy(265, 52, str_i);//分数
+solidroundrect(350, 10, 460, 80, 15, 15);//圆角梯形
+outtextxy(380, 20, "总分");
+setbkcolor(RGB(184, 175, 160));
+itoa(score, str, 10);
+outtextxy(395, 52, str);//分数
+//sco = score;
+
+setfont(30, 0, "微软雅黑");
+RECT r2 = { 288,100,388,150 };
+drawtext("再来？", &r2, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+RECT r5 = { 288,160,388,210 };
+drawtext("退出？", &r5, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+
+
+setfont(30, 0, "Microsoft Yahei UI Bold");//设置字体
+
+setfillcolor(RGB(187, 173, 160));
+solidroundrect(10, 210, 470, 670, 20, 20);

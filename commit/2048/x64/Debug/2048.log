@@ -1,0 +1,5 @@
+﻿  2048.cpp
+D:\新桌面\编程用\Visual Studio2022v17.0\project\2048\2048\2048.cpp(147,2): warning C4996: 'itoa': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _itoa. See online help for details.
+D:\新桌面\编程用\Visual Studio2022v17.0\project\2048\2048\2048.cpp(171,7): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\新桌面\编程用\Visual Studio2022v17.0\project\2048\2048\2048.cpp(379,19): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  2048.vcxproj -> D:\新桌面\编程用\Visual Studio2022v17.0\project\2048\x64\Debug\2048.exe
